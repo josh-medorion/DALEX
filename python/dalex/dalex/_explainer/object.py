@@ -100,7 +100,8 @@ class Explainer:
     """
 
     def __init__(self,
-                 model,
+                 # model,
+                 y_hat,
                  data=None,
                  y=None,
                  predict_function=None,
@@ -118,8 +119,7 @@ class Explainer:
         helper.verbose_cat("Preparation of a new explainer is initiated\n", verbose=verbose)
 
         # REPORT: checks for data
-        data, model = checks.check_data(data, model, verbose)
-
+        # data, model = checks.check_data(data, model, verbose)
         # REPORT: checks for y
         y = checks.check_y(y, data, verbose)
 
@@ -127,42 +127,44 @@ class Explainer:
         weights = checks.check_weights(weights, data, verbose)
 
         # REPORT: checks for model_class
-        model_class, _model_info = checks.check_model_class(model_class, model, verbose)
+        # model_class, _model_info = checks.check_model_class(model_class, model, verbose)
 
         # REPORT: checks for label
-        label, _model_info = checks.check_label(label, model_class, _model_info, verbose)
+        # label, _model_info = checks.check_label(label, model_class, _model_info, verbose)
 
         # REPORT: checks for predict_function and model_type
         # these two are together only because of `yhat_exception_dict`
-        predict_function, model_type, y_hat, _model_info = \
-            checks.check_predict_function_and_model_type(predict_function, model_type,
-                                                         model, data, model_class, _model_info,
-                                                         precalculate, verbose)
+        # predict_function, model_type, y_hat, _model_info = \
+        #     checks.check_predict_function_and_model_type(predict_function, model_type,
+        #                                                  model, data, model_class, _model_info,
+        #                                                  precalculate, verbose)
 
         # if data is specified then we may test predict_function
         # at this moment we have predict function
 
         # REPORT: checks for residual_function
-        residual_function, residuals, _model_info = checks.check_residual_function(
-            residual_function, predict_function, model, data, y, _model_info, precalculate, verbose
-        )
+        # residual_function, residuals, _model_info = checks.check_residual_function(
+        #     residual_function, predict_function, model, data, y, _model_info, precalculate, verbose
+        # )
 
         # REPORT: checks for model_info
-        _model_info = checks.check_model_info(model_info, _model_info, verbose)
+        # _model_info = checks.check_model_info(model_info, _model_info, verbose)
 
         # READY to create an explainer
-        self.model = model
+        # self.model = model
         self.data = data
         self.y = y
-        self.predict_function = predict_function
+        # self.predict_function = predict_function
         self.y_hat = y_hat
-        self.residual_function = residual_function
-        self.residuals = residuals
-        self.model_class = model_class
-        self.label = label
-        self.model_info = _model_info
+        # self.residual_function = residual_function
+        # self.residuals = residuals
+        # self.model_class = model_class
+        # self.label = label
+        self.label = 'Medorion special model'
+        # self.model_info = _model_info
         self.weights = weights
-        self.model_type = model_type
+        # self.model_type = model_type
+        self.model_type = 'classification'
 
         helper.verbose_cat("\nA new explainer has been created!", verbose=verbose)
 
