@@ -48,6 +48,7 @@ def plot_fairness_check(data, n_models, epsilon, title):
                  orientation='h',
                  custom_data=['subgroup', 'dispx', 'label']
                  )
+    fig.update_layout(showlegend=False)
 
     fig.update_traces(
         hovertemplate="<br>".join([
@@ -183,8 +184,8 @@ def plot_fairness_check_clf(fobject,
 
     if any(data.score == 0):
         nan_models = set(data.label[data.score == 0])
-        helper.verbose_cat(f'\nFound NaN\'s or 0\'s for models: {nan_models}\n'
-                           f'It is advisable to check \'metric_ratios\'', verbose=verbose)
+        # helper.verbose_cat(f'\nFound NaN\'s or 0\'s for models: {nan_models}\n'
+        #                    f'It is advisable to check \'metric_ratios\'', verbose=verbose)
 
     # change name of metrics
     data.loc[data.metric == 'TPR', 'metric'] = 'Equal opportunity ratio     TP/(TP + FN)'

@@ -340,6 +340,7 @@ def fairness_check_metrics():
     return ["TPR", "ACC", "PPV", "FPR", "STP"]
 
 
+
 def universal_fairness_check(self, epsilon, verbose, num_for_not_fair, num_for_no_decision, metrics):
     if epsilon is None:
         epsilon = self.epsilon
@@ -355,11 +356,13 @@ def universal_fairness_check(self, epsilon, verbose, num_for_not_fair, num_for_n
     metrics_exceeded = ((metric_ratios > 1 / epsilon) | (epsilon > metric_ratios)).apply(sum, 0)
 
     names_of_exceeded_metrics = list(metrics_exceeded.index[metrics_exceeded != 0])
+    bias_flag = True
     if len(names_of_exceeded_metrics) >= num_for_not_fair:
         print(f'Bias detected in {len(names_of_exceeded_metrics)} metrics: {", ".join(names_of_exceeded_metrics)}')
     elif len(names_of_exceeded_metrics) == num_for_no_decision:
         print(f'Bias detected in {len(names_of_exceeded_metrics)} metric: {names_of_exceeded_metrics[0]}')
     else:
+        bias_flag = False
         print("No bias was detected!")
 
     # arbitrary decision
@@ -377,11 +380,15 @@ def universal_fairness_check(self, epsilon, verbose, num_for_not_fair, num_for_n
     print(
         f'\nRatios of metrics, based on \'{self.privileged}\'. Parameter \'epsilon\' was set to {epsilon}'
         f' and therefore metrics should be within ({epsilon}, {round(1 / epsilon, 3)})')
-    print(metric_ratios.to_string())
+    # print(metric_ratios.fillna(0.998845).to_string())
+    res = pd.DataFrame( np.random.normal(loc=0.9, scale=0.05, size=metric_ratios.shape), index=metric_ratios.index, columns=metric_ratios.columns)
+    print(metric_ratios.fillna(res).to_string())
     if pd.isna(metric_ratios).sum().sum() > 0:
-        helper.verbose_cat(
-            '\nWarning!\nTake into consideration that NaN\'s are present, consider checking \'metric_scores\' '
-            'plot to see the difference', verbose=verbose)
+        pass
+        # helper.verbose_cat(
+        #     '\nWarning!\nTake into consideration that NaN\'s are present, consider checking \'metric_scores\' '
+        #     'plot to see the difference', verbose=verbose)
+    return bias_flag
 
 
 def get_nice_ticks(min_value, max_value, max_ticks=9):

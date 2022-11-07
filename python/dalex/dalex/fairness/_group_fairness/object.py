@@ -64,12 +64,13 @@ class GroupFairnessClassification(_FairnessObject):
 
         """
 
-        utils.universal_fairness_check(self,
+        bool_flag = utils.universal_fairness_check(self,
                                        epsilon,
                                        verbose,
                                        num_for_not_fair=2,
                                        num_for_no_decision=1,
                                        metrics=utils.fairness_check_metrics())
+        return bool_flag
 
     def plot(self,
              objects=None,
